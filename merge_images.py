@@ -1,9 +1,8 @@
 #!/usr/bin/python
 
 # This script merges together a set of images.
-# Requires Python 3 and Pillow, the friendly PIL fork (https://python-pillow.github.io/)
+# Requires Python 3.1+ and Pillow, the friendly PIL fork (https://python-pillow.github.io/)
 
-import os, sys
 import math
 from PIL import Image
 
@@ -59,8 +58,26 @@ def mergeImages(files, output, columns = None, tile_width = None, tile_height = 
 
   out.save(output)
 
-  print('\nMerged {} images into "{}".'.format(len(files), output))
+  print('\nMerged {} images into {}x{} pixel image "{}".'.format(len(files), out.size[0], out.size[1], output))
   print('The images were arranged into {} rows and {} columns with {}x{} pixel tiles.'.format(rows, cols, tile_width, tile_height))
 
 if __name__ == "__main__":
-    mergeImages(sys.argv[1:], 'out.png', None)
+  import os, sys
+  import argparse
+  
+  parser = argparse.ArgumentParser(prog=sys.argv[0], description='Merge images into a single image.')
+  parser.add_argument('file', nargs='+', help='the image files to merge')
+  parser.add_argument('-c', '--columns', type=int, help='the number of columns to use, where 0 means to use 1 row (default: square root of the number of files)')
+  parser.add_argument('-f', '--force', action='store_true', help='overwrite output file without prompting')
+  parser.add_argument('-H', '--height', type=int, help='the height of the tiles; ignored if width not specified (default: the tallest image)')
+  parser.add_argument('-W', '--width', type=int, help='the width of the tiles; ignored if height not specified (default: the widest image)')
+  parser.add_argument('-o', '--output', default='out.png', help='the output file (default: out.png)')
+  args = parser.parse_args()
+  
+  if not args.force and os.path.exists(args.output):
+    ans = input('"{}" already exists, overwrite? '.format(args.output))
+    if ans.lower() != 'y' and ans.lower() != 'yes' and ans.lower() != 'yes, please':
+      print('Aborted.')
+      exit()
+    
+  mergeImages(args.file, args.output, columns=args.columns, tile_width=args.width, tile_height=args.height)
