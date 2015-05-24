@@ -1,15 +1,21 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
-# This script merges together a set of images.
-# Requires Python 3.1+ and Pillow, the friendly PIL fork (https://python-pillow.github.io/)
+"""
+Merge a set of images into a single image.
+Execute with the -h option to see usage information.
+
+Requires Python 3 and Pillow, the friendly PIL fork (https://python-pillow.github.io/).
+Pillow must be installed with zlib.
+"""
 
 import math
 from PIL import Image
 
-# Determine the number of rows and columns for num_images images.
-# The number of columns may be specified, or it can be left as None
-# in which case round(sqrt(num_images)) will be used
 def calculateTileDimensions(num_images, columns = None):
+  """
+  Determine the number of rows and columns for num_images images.
+  The number of columns may be specified, or it can be left as None in which case round(sqrt(num_images)) will be used.
+  """
   if columns is None: 
     columns = int(round(math.sqrt(num_images), 0))
   elif columns <= 0:
@@ -21,8 +27,8 @@ def calculateTileDimensions(num_images, columns = None):
   
   return rows, columns
 
-# Find the largest width and height in the list of files.
 def findLargestDimensions(files):
+  """Find the largest width and height in the list of files."""
   width = 0
   height = 0
   
@@ -33,8 +39,8 @@ def findLargestDimensions(files):
   
   return width, height
 
-# Merge the specified images together into a single image.
 def mergeImages(files, output, columns = None, tile_width = None, tile_height = None):
+  """Merge the specified images together into a single image."""
   rows, cols = calculateTileDimensions(len(files), columns)
   
   # find the tile size if not specified (uses largest image boundaries)
@@ -79,5 +85,5 @@ if __name__ == "__main__":
     if ans.lower() != 'y' and ans.lower() != 'yes' and ans.lower() != 'yes, please':
       print('Aborted.')
       exit()
-    
+   
   mergeImages(args.file, args.output, columns=args.columns, tile_width=args.width, tile_height=args.height)

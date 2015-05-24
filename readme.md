@@ -1,9 +1,9 @@
 # merge-images.py
-This script merges multiple images into a single image. This could be used, for example, to create a sprite sheet from a series of separate images.
+This script merges multiple images into a single image. The images are tiled by the dimensions of the largest image and output as a PNG with transparency. This could be used, for example, to create a sprite sheet from a series of separate images.
 
 ## Requirements
-  - Python 3.4
-  - Pillow, the friendly PIL fork (https://python-pillow.github.io/)
+  - Python 3
+  - Pillow, the friendly PIL fork (https://python-pillow.github.io/), installed with zlib present
 
 ## Usage
 ```
